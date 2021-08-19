@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Socket.IO chat</title>
+    <style>
+      
+      body { margin: 0; padding-bottom: 3rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+      #form { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 4rem; box-sizing: border-box; backdrop-filter: blur(10px); }
+      #input { border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
+      #input:focus { outline: none; }
+      #form > button { background: #333; border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; }
+
+      #messages { list-style-type: none; margin: 0; padding: 0;float: left;width:100%;border-radius: 5px;padding-left:5px ;padding-right: 5px;flex-direction: row;float: left;clear:left;}
+      #messages > li { padding: 0.5rem 1rem; background-color: coral;margin: 25px;border-radius: 5px;padding-right: 5px;padding-left: 5px;}
+      #messages > li:nth-child(odd) { background:ghostwhite;margin-top: 2rem;border-radius: 5px;padding-left:5px;margin: 25px;}
+      .header{
+        background-color: coral;
+        height: 75px;
+        flex-direction:row;
+        
+        
+      }
+      .profilePic{
+        background-color: ghostwhite;
+        height: 60px;
+        border-radius: 30px;
+        width:60px;
+        float: left;
+        margin-right:5rem;
+        margin-left: 5rem;
+        align-content: center;
+        margin-top: 0.25rem;
+        
+      }
+
+      .chatName{
+       margin-top: auto;
+       padding-top: 0.8em;
+       
+      }
+      .threeDots{
+        float: right;
+        width:10px;
+        background-color: coral;
+        margin:1rem;
+        border-width: 0em;
+        z-index: 5px;
+
+      }
+      
+    </style>
+  </head>
+  <body>
+    
+    <div class="header">
+      <div class="profilePic">
+         
+      </div>
+      <div style="width: 300px;height:75px;float:left">
+        <h2 class="chatName">Resolute AI bot</h2>
+
+      </div>
+
+      
+      <button style="font-size:30px" class = "threeDots"><i class="fa fa-ellipsis-v"></i></button>
+      
+      
+    </div>
+
+
+    <ul id="messages"></ul>
+    <form id="form" action="">
+      <input id="input" autocomplete="off" placeholder="Enter your message"/><button>Send</button>
+    </form>
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+      var socket = io();
+
+      var messages = document.getElementById('messages');
+      var form = document.getElementById('form');
+      var input = document.getElementById('input');
+
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (input.value) {
+          socket.emit('chat message', input.value);
+          input.value = '';
+        }
+      });
+
+      socket.on('chat message', function(msg) {
+        var item = document.createElement('li');
+        item.textContent = msg;
+        messages.appendChild(item);
+        window.scrollTo(0, document.body.scrollHeight);
+      });
+    </script>
+  </body>
+</html>
